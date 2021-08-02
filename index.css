@@ -1,0 +1,660 @@
+html {
+  height: 100vh;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background-color: black;
+  color: #fff;
+  /* background-image: url('http://cdn30.us1.fansshare.com/image/tetris/tetris-wallpaper-pattern-background-background-853431515.jpg'); */
+  /* background-image: url('https://img2.badfon.ru/original/1920x1080/3/81/minimalizm-cveta-bloki-tetris.jpg'); */
+  background-image: url("images/bg-layer1.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-height: 100vh;
+  max-width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 45vh 50vh 5vh;
+  justify-items: center;
+  position: relative;
+  color: #fff;
+}
+
+/* основной блок с контентом grid-элемент */
+#root {
+  width: 100%;
+  text-align: center;
+  grid-column: 2/3;
+  grid-row: 1/3;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 0;
+  position: relative;
+}
+
+/* стили для блока #root */
+#root h1 {
+  font-family: "Press Start 2P", Consolas, monospace;
+  color: white;
+}
+#root canvas {
+  display: block;
+  margin: 0 auto;
+  height: 85vh;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.exit-screen,
+#btnExit,
+#btnSound {
+  grid-column: 2/3;
+  grid-row: 1/3;
+}
+
+/* стили для основных контейнеров */
+.exit-screen,
+.mainmenu,
+.content {
+  align-self: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  margin-top: 20px;
+  width: 100%;
+  height: 85vh;
+  padding: 0 10px 5px 10px;
+  background-color: rgba(251, 251, 251, 0.5);
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+  border-radius: 0.8rem;
+  color: hsl(220, 50%, 90%);
+  background: linear-gradient(to right, hsl(210, 30%, 20%), hsl(255, 30%, 25%));
+  box-shadow: 0.4rem 0.4rem 10.2rem 0.2rem hsla(236, 50%, 50%, 0.4);
+  transition: display 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.content {
+  height: auto;
+}
+.content .hidding {
+  background-color: rgba(251, 251, 251, 0);
+}
+.game {
+  background-color: linear-gradient(
+    to right,
+    hsl(210, 30%, 20%),
+    hsl(255, 30%, 25%)
+  );
+}
+
+/* таблица рекордов */
+#recordsBoard {
+  border: solid 2px rgba(251, 251, 251, 0.3);
+  border-radius: 0.8rem;
+}
+.row {
+  height: 25px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.row span:nth-child(n + 1) {
+  flex: 1; /*размер ячеек в таблице*/
+}
+.row:nth-child(2n + 2) {
+  background-color: rgba(
+    251,
+    251,
+    251,
+    0.1
+  ); /*чередование светлой/темной полос*/
+}
+
+/* стили страниц */
+.rules-page,
+.records-page {
+  width: 100%;
+}
+
+.iconIMG {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+}
+.control li {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.iconIMG + span {
+  align-self: center;
+  margin: 10px 0;
+}
+
+.btnContrl i {
+  font-size: 40px;
+  margin: 10px;
+}
+
+/* стили для окна сохранения */
+.exit-screen {
+  margin-top: 30px;
+  align-items: center;
+  font-family: "Press Start 2P", Consolas, monospace;
+}
+.exit-screen a {
+  text-align: center;
+  max-width: 200px;
+}
+.exit-screen p {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+.input-name {
+  width: 80%;
+  height: 50px;
+  font-size: 1.8rem;
+  color: hsl(220, 50%, 90%);
+  background: linear-gradient(to right, hsl(210, 30%, 20%), hsl(255, 30%, 25%));
+  box-shadow: 0.4rem 0.4rem 10.2rem 0.2rem hsla(236, 50%, 50%, 0.4);
+  border-radius: 0.8rem;
+  padding: 1.4rem 3.2rem;
+  outline: none;
+  transition: 0.2s;
+  text-align: center;
+}
+.input-name:hover,
+.input-name:focus {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0 4.4rem 0.2rem hsla(236, 50%, 50%, 0.4);
+}
+.input-name:focus {
+  box-shadow: 0 0 4.4rem 0.2rem hsla(236, 50%, 50%, 0.4),
+    0 0 0 0.4rem hsl(220, 25%, 10%), 0 0 0 0.5rem hsl(200, 65%, 54%);
+}
+
+/* полосы на главном экране */
+.line {
+  position: absolute;
+  background-color: hsl(200, 65%, 54%);
+  box-shadow: 0px 0px 12px hsl(200, 65%, 54%);
+  height: calc(100% - 20px);
+  overflow: hidden;
+  border-radius: 0;
+  width: 2px;
+}
+.line.left {
+  top: 10px;
+  left: 22px;
+}
+.line.right {
+  top: 10px;
+  right: 22px;
+}
+.line .scanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  width: 100%;
+  border-radius: 50%;
+  animation: scanner-loop 3s ease-in-out infinite;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
+  height: 50%;
+}
+@keyframes scanner-loop {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+/* стили для блрка с parallax */
+#parallax1,
+#parallax2 {
+  grid-column: 1/4;
+  grid-row: 1/4;
+  position: relative;
+  top: -4vh;
+  left: -54vw;
+  z-index: -1;
+}
+.bg-image {
+  /*фоновая картинка*/
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.pixaby {
+  width: 50px;
+  height: 50px;
+}
+
+/* footer grid-элемент */
+footer {
+  grid-column: 1/4;
+  grid-row: 3/4;
+}
+footer p {
+  margin: 8px;
+}
+/* header веутри #root */
+header {
+  align-content: flex-start;
+}
+
+/* класс для скрыть/показать */
+.hide {
+  display: none;
+  width: 0;
+}
+
+.hiding .exit-screen {
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+/* for button HOMEPAGE */
+.button_base {
+  margin: 0;
+  border: 0;
+  font-size: 18px;
+  position: relative;
+  top: 0;
+  left: 50%;
+  margin-left: -100px;
+  width: 200px;
+  height: 40px;
+  text-align: center;
+  box-sizing: border-box;
+  user-select: none;
+  cursor: default;
+  font-family: "Press Start 2P", Consolas, monospace;
+  box-shadow: 0.4rem 0.4rem 10.2rem 0.2rem hsla(236, 50%, 50%, 0.4);
+}
+
+.button_base:hover {
+  cursor: pointer;
+}
+.b07_3d_double_roll {
+  perspective: 500px;
+  transform-style: preserve-3d;
+}
+
+.b07_3d_double_roll div {
+  position: absolute;
+  text-align: center;
+  padding: 10px;
+  border: #1798db solid 1px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.b07_3d_double_roll div:nth-child(1) {
+  color: #fff;
+  background-color: rgb(244, 184, 35);
+  z-index: 0;
+  width: 100%;
+  height: 50px;
+  clip: rect(0px, 100px, 50px, 0px);
+  position: absolute;
+  transition: all 0.2s ease;
+  transform: rotateX(0deg);
+  transform-origin: 50% 50% -25px;
+}
+
+.b07_3d_double_roll div:nth-child(2) {
+  color: #fff;
+  background-color: #1798db;
+  z-index: -1;
+  width: 100%;
+  height: 50px;
+  clip: rect(0px, 100px, 50px, 0px);
+  position: absolute;
+  transform: rotateX(90deg);
+  transition: all 0.2s ease;
+  transform-origin: 50% 50% -25px;
+}
+
+.b07_3d_double_roll div:nth-child(3) {
+  color: #fff;
+  background-color: rgb(244, 184, 35);
+  z-index: 0;
+  width: 100%;
+  height: 50px;
+  clip: rect(0px, 200px, 50px, 100px);
+  position: absolute;
+  transition: all 0.2s ease 0.1s;
+  transform: rotateX(0deg);
+  transform-origin: 50% 50% -25px;
+}
+
+.b07_3d_double_roll div:nth-child(4) {
+  color: #fff;
+  background-color: #1798db;
+  z-index: -1;
+  width: 100%;
+  height: 50px;
+  clip: rect(0px, 200px, 50px, 100px);
+  position: absolute;
+  transform: rotateX(-90deg);
+  transition: all 0.2s ease 0.1s;
+  transform-origin: 50% 50% -25px;
+}
+
+.b07_3d_double_roll:hover div:nth-child(1) {
+  background-color: #1798db;
+  transition: all 0.2s ease;
+  transform: rotateX(-90deg);
+}
+
+.b07_3d_double_roll:hover div:nth-child(2) {
+  color: #ffffff;
+  transition: all 0.2s ease;
+  transform: rotateX(0deg);
+}
+
+.b07_3d_double_roll:hover div:nth-child(3) {
+  background-color: #1798db;
+  transition: all 0.2s ease 0.1s;
+  transform: rotateX(90deg);
+}
+
+.b07_3d_double_roll:hover div:nth-child(4) {
+  color: #ffffff;
+  transition: all 0.2s ease 0.1s;
+  transform: rotateX(0deg);
+}
+
+/* for button MENU */
+.btn:after {
+  background: linear-gradient(to right, hsl(210, 30%, 20%), hsl(255, 30%, 25%));
+}
+.b-green,
+.b-green:before {
+  background: rgba(73, 155, 234, 1);
+  background: linear-gradient(
+    45deg,
+    rgba(73, 155, 234, 1) 0%,
+    rgba(26, 188, 156, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#1abc9c', GradientType=1 );
+}
+
+.b-red,
+.b-red:before {
+  background: rgba(234, 110, 72, 1);
+  background: linear-gradient(
+    45deg,
+    rgba(234, 110, 72, 1) 0%,
+    rgba(188, 26, 99, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea6e48', endColorstr='#bc1a63', GradientType=1 );
+}
+
+.b-orange,
+.b-orange:before {
+  background: rgba(255, 193, 7, 1);
+  background: linear-gradient(
+    45deg,
+    rgba(255, 193, 7, 1) 0%,
+    rgba(255, 87, 34, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc107', endColorstr='#ff5722', GradientType=1 );
+}
+
+.btn {
+  display: inline-block;
+  position: relative;
+  width: 75%;
+  border-radius: 3px;
+  text-decoration: none;
+  padding: 0.5em;
+  margin: 0.5em;
+  font-size: 1.5em;
+  font-weight: bold;
+  transition: all 0.5s;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Press Start 2P", Consolas, monospace;
+}
+.btn:hover {
+  text-shadow: 0px 0px 0px rgba(255, 255, 255, 0.75);
+}
+.btn:hover:after {
+  left: 100%;
+  top: 100%;
+  bottom: 100%;
+  right: 100%;
+}
+.btn:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+.btn:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  right: 2px;
+  z-index: -1;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+
+/* for button EXIT */
+section a,
+#btnExit,
+#btnSound {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 5px;
+  top: 0;
+  margin-top: -25px;
+  margin-right: -25px;
+  background-color: linear-gradient(
+    to right,
+    hsl(210, 30%, 20%),
+    hsl(255, 30%, 25%)
+  );
+  border-radius: 25px;
+  opacity: 1;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  box-shadow: 0px 0px 30px 0px hsla(236, 50%, 50%, 0.4);
+  cursor: pointer;
+}
+section a > span,
+#btnExit > span {
+  background-color: #f5a700;
+  display: block;
+  height: 6px;
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  position: absolute;
+  top: 50%;
+  margin-top: -3px;
+  left: 9px;
+  width: 32px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+}
+section a > span span,
+#btnExit > span span {
+  display: block;
+  background-color: #ed7f00;
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+section a > span.left,
+#btnExit > span.left {
+  transform: rotate(45deg);
+  transform-origin: center;
+}
+section a > span.left .circle-left,
+#btnExit > span.left .circle-left {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 0;
+}
+section a > span.left .circle-right,
+#btnExit > span.left .circle-right {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 26px;
+}
+section a > span.right,
+#btnExit > span.right {
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+section a > span.right .circle-left,
+#btnExit > span.right .circle-left {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 0;
+}
+section a > span.right .circle-right,
+#btnExit > span.right .circle-right {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 26px;
+}
+section a:hover > span,
+#btnExit:hover > span {
+  background-color: #2faee0;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+section a:hover > span span,
+#btnExit:hover > span span {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  background-color: #008ac9;
+}
+section a:hover > span.left .circle-left,
+#btnExit:hover > span.left .circle-left {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 26px;
+}
+section a:hover > span.left .circle-right,
+#btnExit:hover > span.left .circle-right {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 0;
+}
+section a:hover > span.right .circle-left,
+#btnExit:hover > span.right .circle-left {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 26px;
+}
+section a:hover > span.right .circle-right,
+#btnExit:hover > span.right .circle-right {
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  margin-left: 0;
+}
+
+/* for button Sound */
+#btnSound {
+  position: absolute;
+  top: 60px;
+  right: 5px;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  font-size: 30px;
+}
+.icon {
+  display: block;
+  top: 5px;
+  left: 12px;
+  color: rgba(255, 193, 7, 1);
+  position: relative;
+}
+.icon:hover {
+  color: rgba(73, 155, 234, 1);
+}
+.icon-volume-mute {
+  position: absolute;
+  top: -25px;
+  right: 15px;
+}
+
+@media (max-width: 600px) {
+  body {
+    grid-template-columns: 1fr 12fr 1fr;
+    grid-template-rows: 45vh 50vh 5vh;
+  }
+  .exit-screen,
+  .mainmenu,
+  .content {
+    padding: 5px;
+  }
+  #root canvas {
+    height: 65vh;
+  }
+}
+@media (max-width: 440px) {
+  #root canvas {
+    height: 50vh;
+  }
+  h1 {
+    font-size: 16px;
+  }
+  h2 {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 1.2rem;
+  }
+  #btnExit {
+    right: 30px;
+    top: 110%;
+  }
+  #btnSound {
+    right: 90px;
+    top: 110%;
+  }
+}
